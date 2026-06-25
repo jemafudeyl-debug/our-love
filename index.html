@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Love World | Official</title>
+    <style>
+        /* 🌟 Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 77, 109, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 77, 109, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 77, 109, 0.4); }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #070f1e; 
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 💕 Falling Hearts Background */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 14px;
+            animation: fall linear infinite;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #02060d;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.5);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        nav .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff4d6d;
+        }
+
+        /* ⏳ Love Counter */
+        .counter-container {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #ff4d6d;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .counter-container span { color: #ff4d6d; }
+
+        /* 🎵 Background Music Button */
+        .music-control-btn {
+            background: #ff4d6d;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+        .music-control-btn:hover { background: #ee3759; }
+
+        /* 🎬 Hero Video Section */
+        .hero {
+            position: relative;
+            height: 75vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 55px;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -2;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 15, 30, 0.6);
+            z-index: -1;
+        }
+
+        /* 📸 Profile Image Design */
+        .profile-wrapper {
+            width: 160px;
+            height: 160px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            z-index: 10;
+            animation: pulse 2.5s infinite, fadeInUp 1s ease-out;
+        }
+
+        .profile-img-center {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #ff4d6d;
+            transition: transform 0.3s;
+        }
+
+        .profile-wrapper:hover .profile-img-center {
+            transform: scale(1.08);
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* 💌 Love Quote Box */
+        .quote-box {
+            background: rgba(15, 23, 42, 0.7);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 3px solid #ff4d6d;
+            font-style: italic;
+            color: #cbd5e1;
+            margin-top: 15px;
+            max-width: 500px;
+            font-size: 15px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: #0f172a;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
+            border: 1px solid #1e293b;
+        }
+
+        .form-section h2 {
+            color: #ff4d6d;
+            font-size: 22px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 5px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 15px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 8px;
+            resize: none;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        textarea:focus { border-color: #ff4d6d; }
+
+        /* 🎭 Mood Selector */
+        .mood-selector {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mood-options { display: flex; gap: 10px; }
+
+        .mood-btn {
+            font-size: 22px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: 0.2s;
+            opacity: 0.5;
+        }
+
+        .mood-btn.selected {
+            opacity: 1;
+            background: #1e293b;
+            transform: scale(1.2);
+        }
+
+        /* Media Inputs */
+        .media-inputs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .file-label {
+            background: #1e293b;
+            color: #ff4d6d;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid #334155;
+            transition: 0.3s;
+        }
+
+        .file-label:hover { background: #334155; }
+        input[type="file"] { display: none; }
+
+        .file-info {
+            font-size: 13px;
+            color: #94a3b8;
+            align-self: center;
+        }
+
+        button.submit-btn {
+            background-color: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        button.submit-btn:hover {
+            background-color: #ee3759;
+        }
+
+        /* 📝 Bucket List Section */
+        .bucket-section {
+            background: #0f172a;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
+            border: 1px solid #1e293b;
+        }
+        .bucket-section h2 {
+            color: #60a5fa;
+            font-size: 22px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 5px;
+        }
+        .bucket-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .bucket-input-group input {
+            flex: 1;
+            padding: 12px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+        .bucket-input-group input:focus { border-color: #60a5fa; }
+        .bucket-add-btn {
+            background: #60a5fa;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .bucket-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1e293b;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #60a5fa;
+        }
+        .bucket-text-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .bucket-item.completed {
+            border-left-color: #10b981;
+            opacity: 0.6;
+        }
+        .bucket-item.completed .b-text {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        /* Memory Cards */
+        .note-card {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-left: 5px solid #ff4d6d;
+            margin-bottom: 20px;
+            position: relative;
+            border: 1px solid #1e293b;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .card-mood { font-size: 24px; }
+
+        .note-card p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        .uploaded-img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card-audio {
+            width: 100%;
+            margin-bottom: 15px;
+            height: 35px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-meta { font-size: 12px; color: #64748b; }
+
+        .delete-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #02060d;
+            color: #64748b;
+            text-align: center;
+            padding: 25px;
+            margin-top: 60px;
+            font-size: 15px;
+            border-top: 1px solid #1e293b;
+        }
+
+        footer .credits { color: #ff4d6d; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <audio id="bgAudio" src="love-song.mp3" loop></audio>
+
+    <nav>
+        <div class="logo">❤️ OUR LOVE LOG</div>
+        <div class="counter-container">
+            💞 Time Together: <span id="daysCount">0</span> Days <span id="hoursCount">0</span> Hours <span id="minsCount">0</span> Mins <span id="secsCount">0</span> Secs
+        </div>
+        <button class="music-control-btn" onclick="toggleMusic()" id="musicBtn">🎵 Play Music</button>
+    </nav>
+
+    <div class="hero">
+        <video autoplay loop muted playsinline class="hero-video">
+            <source src="love-video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+
+        <div class="profile-wrapper" onclick="scrollToContent()">
+            <img src="us.jpg" alt="Our Profile" class="profile-img-center">
+        </div>
+
+        <h1>Welcome to Our Beautiful Journey</h1>
+        
+        <div class="quote-box" id="quoteBox">"You are the greatest gift in my entire life."</div>
+    </div>
+
+    <div class="main-content" id="loveContentSection">
+        
+        <div class="bucket-section">
+            <h2>✈️ Our Shared Dreams & Plans (Bucket List)</h2>
+            <div class="bucket-input-group">
+                <input type="text" id="bucketInput" placeholder="Write something we dream to do together...">
+                <button class="bucket-add-btn" onclick="addBucketItem()">Add</button>
+            </div>
+            <div id="bucketContainer"></div>
+        </div>
+
+        <div class="form-section">
+            <h2>✍️ Save a New Memory, Photo or Song</h2>
+            
+            <div class="mood-selector">
+                <label>Today's Mood:</label>
+                <div class="mood-options">
+                    <span class="mood-btn selected" onclick="selectMood('🥰', this)">🥰</span>
+                    <span class="mood-btn" onclick="selectMood('😊', this)">😊</span>
+                    <span class="mood-btn" onclick="selectMood('💖', this)">💖</span>
+                    <span class="mood-btn" onclick="selectMood('😢', this)">😢</span>
+                    <span class="mood-btn" onclick="selectMood('😡', this)">😡</span>
+                </div>
+            </div>
+
+            <textarea id="loveMessage" placeholder="Write today's beautiful memory here..."></textarea>
+            
+            <div class="media-inputs">
+                <label for="imageInput" class="file-label">📸 Choose Photo</label>
+                <input type="file" id="imageInput" accept="image/*">
+                
+                <label for="audioInput" class="file-label" style="color: #60a5fa; border-color: #1e3a8a;">🎵 Choose Song</label>
+                <input type="file" id="audioInput" accept="audio/*">
+                
+                <div id="fileStatus" class="file-info"></div>
+            </div>
+
+            <button class="submit-btn" onclick="saveMemory()">Record Memory</button>
+        </div>
+
+        <div class="history-section">
+            <h2>📅 Our Memory Archive</h2>
+            <div id="memoryContainer"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 Designed and Developed with ❤️ | <span class="credits">Made by Anaya Jemal</span></p>
+    </footer>
+
+    <script>
+        let selectedMood = '🥰';
+        let base64Image = null;
+        let base64Audio = null;
+
+        // 💌 Universal Love Quotes (Perfect for boyfriend or girlfriend)
+        const loveQuotes = [
+            "\"You are the greatest gift in my entire life.\"",
+            "\"No matter where the road takes us, I will always walk by your side.\"",
+            "\"My entire world looks so much brighter and more beautiful with your love.\"",
+            "\"Your love is a brilliant light that shines deep inside my heart forever.\"",
+            "\"I love you so much; every single moment spent with you is pure magic.\""
+        ];
+
+        // 🌟 Quote Rotator
+        function rotateQuotes() {
+            const quoteBox = document.getElementById('quoteBox');
+            let index = 0;
+            setInterval(() => {
+                index = (index + 1) % loveQuotes.length;
+                quoteBox.innerText = loveQuotes[index];
+            }, 6000); 
+        }
+
+        // 💕 Falling Hearts Animation Generator
+        function createFallingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartSymbols = ['❤️', '💖', '💕', '✨', '🌸'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                heart.style.fontSize = (Math.random() * 10 + 12) + 'px';
+                container.appendChild(heart);
+
+                setTimeout(() => { heart.remove(); }, 6000);
+            }, 400);
+        }
+
+        // 🎵 Music Controller
+        function toggleMusic() {
+            const audio = document.getElementById('bgAudio');
+            const btn = document.getElementById('musicBtn');
+            if (audio.paused) {
+                audio.play();
+                btn.innerText = "⏸️ Pause Music";
+            } else {
+                audio.pause();
+                btn.innerText = "🎵 Play Music";
+            }
+        }
+
+        function scrollToContent() {
+            document.getElementById('loveContentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function startLoveCounter() {
+            const startDate = new Date();
+            startDate.setMonth(startDate.getMonth() - 10);
+
+            setInterval(() => {
+                const now = new Date();
+                const difference = now - startDate;
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('daysCount').innerText = days;
+                document.getElementById('hoursCount').innerText = hours;
+                document.getElementById('minsCount').innerText = minutes;
+                document.getElementById('secsCount').innerText = seconds;
+            }, 1000);
+        }
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            let file = e.target.files[0];
+            if(file) {
+                document.getElementById('fileStatus').innerText = "📸 Photo Selected";
+                let reader = new FileReader();
+                reader.onload = function(el) { base64Image = el.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('audioInput').addEventListener('change', function(e) {
+            let file = e.target.files[0];
+            if(file) {
+                document.getElementById('fileStatus').innerText = "🎵 Song Selected";
+                let reader = new FileReader();
+                reader.onload = function(el) { base64Audio = el.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function selectMood(mood, element) {
+            selectedMood = mood;
+            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        window.onload = function() {
+            startLoveCounter();
+            loadMemories();
+            loadBucketList();
+            createFallingHearts();
+            rotateQuotes();
+        };
+
+        // ✈️ Bucket List Functions
+        function addBucketItem() {
+            const input = document.getElementById('bucketInput');
+            if (input.value.trim() === "") return;
+            
+            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
+            list.push({ text: input.value, done: false });
+            localStorage.setItem("our_bucket", JSON.stringify(list));
+            input.value = "";
+            loadBucketList();
+        }
+
+        function loadBucketList() {
+            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
+            const container = document.getElementById('bucketContainer');
+            container.innerHTML = "";
+            
+            list.forEach((item, index) => {
+                let checked = item.done ? 'checked' : '';
+                let completedClass = item.done ? 'completed' : '';
+                container.innerHTML += `
+                    <div class="bucket-item ${completedClass}">
+                        <div class="bucket-text-group">
+                            <input type="checkbox" ${checked} onclick="toggleBucket(${index})">
+                            <span class="b-text">${item.text}</span>
+                        </div>
+                        <button class="delete-btn" onclick="deleteBucket(${index})">🗑️</button>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleBucket(index) {
+            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
+            list[index].done = !list[index].done;
+            localStorage.setItem("our_bucket", JSON.stringify(list));
+            loadBucketList();
+        }
+
+        function deleteBucket(index) {
+            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
+            list.splice(index, 1);
+            localStorage.setItem("our_bucket", JSON.stringify(list));
+            loadBucketList();
+        }
+
+        function saveMemory() {
+            let text = document.getElementById("loveMessage").value;
+            if(text.trim() === "" && !base64Image && !base64Audio) {
+                alert("Please write a text, choose a photo, or choose a song!");
+                return;
+            }
+
+            let currentTime = new Date().toLocaleDateString('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
+            let memories = JSON.parse(localStorage.getItem("our_memories")) || [];
+            memories.push({ message: text, image: base64Image, audio: base64Audio, time: currentTime, mood: selectedMood });
+            localStorage.setItem("our_memories", JSON.stringify(memories));
+
+            document.getElementById("loveMessage").value = "";
+            document.getElementById("imageInput").value = "";
+            document.getElementById("audioInput").value = "";
+            document.getElementById("fileStatus").innerText = "";
+            base64Image = null;
+            base64Audio = null;
+            loadMemories();
+        }
+
+        function loadMemories() {
+            let memories = JSON.parse(localStorage.getItem("our_memories")) || [];
+            let container = document.getElementById("memoryContainer");
+            container.innerHTML = "";
+
+            for (let i = memories.length - 1; i >= 0; i--) {
+                let item = memories[i];
+                let imgTag = item.image ? `<img src="${item.image}" class="uploaded-img">` : '';
+                let audioTag = item.audio ? `<audio src="${item.audio}" controls class="card-audio"></audio>` : '';
+                let msgTag = item.message ? `<p>${item.message}</p>` : '';
+                let moodTag = item.mood ? `<span class="card-mood">${item.mood}</span>` : '🥰';
+
+                container.innerHTML += `
+                    <div class="note-card">
+                        <div class="card-header">${moodTag}</div>
+                        ${msgTag}
+                        ${imgTag}
+                        ${audioTag}
+                        <div class="card-footer">
+                            <div class="note-meta">📅 ${item.time}</div>
+                            <button class="delete-btn" onclick="deleteMemory(${i})">Delete 🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function deleteMemory(index) {
+            if(confirm("Are you sure you want to delete this memory permanently?")) {
+                let memories = JSON.parse(localStorage.getItem("our_memories")) || [];
+                memories.splice(index, 1);
+                localStorage.setItem("our_memories", JSON.stringify(memories));
+                loadMemories();
+            }
+        }
+    </script>
+</body>
+</html>

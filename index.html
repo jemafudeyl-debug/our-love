@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Love World | Official</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* 🌟 Animations */
         @keyframes fadeInUp {
@@ -135,7 +136,7 @@
             transform: translate(-50%, -50%);
             object-fit: cover;
         }
-
+        
         .hero-overlay {
             position: absolute;
             top: 0;
@@ -522,11 +523,15 @@
     </footer>
 
     <script>
+        // 🛠️ Supabase Configuration
+        const SUPABASE_URL = "https://nydtnemckzvsdsgnpjde.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_3O-8eQBB9BT9hRc9TEJcBg_OBGpNvA3";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let selectedMood = '🥰';
         let base64Image = null;
         let base64Audio = null;
 
-        // 💌 Universal Love Quotes (Perfect for boyfriend or girlfriend)
         const loveQuotes = [
             "\"You are the greatest gift in my entire life.\"",
             "\"No matter where the road takes us, I will always walk by your side.\"",
@@ -535,7 +540,6 @@
             "\"I love you so much; every single moment spent with you is pure magic.\""
         ];
 
-        // 🌟 Quote Rotator
         function rotateQuotes() {
             const quoteBox = document.getElementById('quoteBox');
             let index = 0;
@@ -545,7 +549,6 @@
             }, 6000); 
         }
 
-        // 💕 Falling Hearts Animation Generator
         function createFallingHearts() {
             const container = document.getElementById('heartsContainer');
             const heartSymbols = ['❤️', '💖', '💕', '✨', '🌸'];
@@ -563,7 +566,6 @@
             }, 400);
         }
 
-        // 🎵 Music Controller
         function toggleMusic() {
             const audio = document.getElementById('bgAudio');
             const btn = document.getElementById('musicBtn');
@@ -634,53 +636,48 @@
             rotateQuotes();
         };
 
-        // ✈️ Bucket List Functions
-        function addBucketItem() {
+        // ✈️ Bucket List Functions (Supabase Connected)
+        async function addBucketItem() {
             const input = document.getElementById('bucketInput');
             if (input.value.trim() === "") return;
             
-            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
-            list.push({ text: input.value, done: false });
-            localStorage.setItem("our_bucket", JSON.stringify(list));
+            await supabase.from('bucket_list').insert([{ text: input.value, done: false }]);
             input.value = "";
             loadBucketList();
         }
 
-        function loadBucketList() {
-            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
+        async function loadBucketList() {
+            let { data: list } = await supabase.from('bucket_list').select('*').order('id', { ascending: true });
             const container = document.getElementById('bucketContainer');
             container.innerHTML = "";
             
-            list.forEach((item, index) => {
+            (list || []).forEach((item) => {
                 let checked = item.done ? 'checked' : '';
                 let completedClass = item.done ? 'completed' : '';
                 container.innerHTML += `
                     <div class="bucket-item ${completedClass}">
                         <div class="bucket-text-group">
-                            <input type="checkbox" ${checked} onclick="toggleBucket(${index})">
+                            <input type="checkbox" ${checked} onclick="toggleBucket(${item.id}, ${item.done})">
                             <span class="b-text">${item.text}</span>
                         </div>
-                        <button class="delete-btn" onclick="deleteBucket(${index})">🗑️</button>
+                        <button class="delete-btn" onclick="deleteBucket(${item.id})">🗑️</button>
                     </div>
                 `;
             });
         }
 
-        function toggleBucket(index) {
-            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
-            list[index].done = !list[index].done;
-            localStorage.setItem("our_bucket", JSON.stringify(list));
+        async function toggleBucket(id, currentStatus) {
+            await supabase.from('bucket_list').update({ done: !currentStatus }).eq('id', id);
             loadBucketList();
         }
 
-        function deleteBucket(index) {
-            let list = JSON.parse(localStorage.getItem("our_bucket")) || [];
-            list.splice(index, 1);
-            localStorage.setItem("our_bucket", JSON.stringify(list));
+        async function deleteBucket(id) {
+            await supabase.from('bucket_list').delete().eq('id', id);
             loadBucketList();
         }
 
-        function saveMemory() {
+        // 📅 Memories Functions (Supabase Connected)
+        async function saveMemory() {
             let text = document.getElementById("loveMessage").value;
             if(text.trim() === "" && !base64Image && !base64Audio) {
                 alert("Please write a text, choose a photo, or choose a song!");
@@ -688,9 +685,7 @@
             }
 
             let currentTime = new Date().toLocaleDateString('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
-            let memories = JSON.parse(localStorage.getItem("our_memories")) || [];
-            memories.push({ message: text, image: base64Image, audio: base64Audio, time: currentTime, mood: selectedMood });
-            localStorage.setItem("our_memories", JSON.stringify(memories));
+            await supabase.from('memories').insert([{ message: text, image: base64Image, audio: base64Audio, time: currentTime, mood: selectedMood }]);
 
             document.getElementById("loveMessage").value = "";
             document.getElementById("imageInput").value = "";
@@ -701,13 +696,12 @@
             loadMemories();
         }
 
-        function loadMemories() {
-            let memories = JSON.parse(localStorage.getItem("our_memories")) || [];
+        async function loadMemories() {
+            let { data: memories } = await supabase.from('memories').select('*').order('id', { ascending: false });
             let container = document.getElementById("memoryContainer");
             container.innerHTML = "";
 
-            for (let i = memories.length - 1; i >= 0; i--) {
-                let item = memories[i];
+            (memories || []).forEach((item) => {
                 let imgTag = item.image ? `<img src="${item.image}" class="uploaded-img">` : '';
                 let audioTag = item.audio ? `<audio src="${item.audio}" controls class="card-audio"></audio>` : '';
                 let msgTag = item.message ? `<p>${item.message}</p>` : '';
@@ -721,18 +715,16 @@
                         ${audioTag}
                         <div class="card-footer">
                             <div class="note-meta">📅 ${item.time}</div>
-                            <button class="delete-btn" onclick="deleteMemory(${i})">Delete 🗑️</button>
+                            <button class="delete-btn" onclick="deleteMemory(${item.id})">Delete 🗑️</button>
                         </div>
                     </div>
                 `;
-            }
+            });
         }
 
-        function deleteMemory(index) {
+        async function deleteMemory(id) {
             if(confirm("Are you sure you want to delete this memory permanently?")) {
-                let memories = JSON.parse(localStorage.getItem("our_memories")) || [];
-                memories.splice(index, 1);
-                localStorage.setItem("our_memories", JSON.stringify(memories));
+                await supabase.from('memories').delete().eq('id', id);
                 loadMemories();
             }
         }
